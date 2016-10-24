@@ -3,7 +3,7 @@ var bodyParser = require('body-parser')
 var request = require('request')
 var app = express()
 
-var token = " enter token here"
+var token = "enter token here"
 
 app.set('port', (process.env.PORT || 5000))
 
@@ -20,7 +20,7 @@ app.get('/', function(req, res) {
 
 // for Facebook verification
 app.get('/webhook/', function(req, res) {
-  if (req.query['hub.verify_token'] === 'Aha_Moment_Labs') {
+  if (req.query['hub.verify_token'] === token) {
     res.send(req.query['hub.challenge'])
   }
   res.send('Error, wrong token')
@@ -46,11 +46,6 @@ app.post('/webhook/', function(req, res) {
     }
   }
   res.sendStatus(200)
-})
-
-// Spin up the server
-app.listen(app.get('port'), function() {
-  console.log('running on port', app.get('port'))
 })
 
 
@@ -127,7 +122,7 @@ function sendGenericMessage(sender) {
 
 function sendRequest(sender, messageData) {
   request({
-    url: 'https://graph.facebook.com/v2.6/me/...',
+    url: 'https://graph.facebook.com/v2.6/me/messages',
     qs: { access_token: token },
     method: 'POST',
     json: {
@@ -142,3 +137,8 @@ function sendRequest(sender, messageData) {
     }
   })
 }
+
+// Spin up the server
+app.listen(app.get('port'), function() {
+  console.log('running on port', app.get('port'))
+})
